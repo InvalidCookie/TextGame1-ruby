@@ -1,5 +1,5 @@
-~maybe: Put logs in fireplace every so often or bad things happen
+~find 5 parts to key
 
-~find parts to key 5 or 7
+~bash/attach/whale command
 
-parts on table for trapdoor and clock
+~splash command, but nothing happened
