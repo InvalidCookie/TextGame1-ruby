@@ -120,6 +120,7 @@ end
 @fireburn = false
 
 @clockattempt = 0
+@p = 0
 
 @key1 = false #fireplace key
 @key2 = false #clock key
@@ -134,7 +135,7 @@ def look()
   puts "A [Table] is in the center of the room%s" % [@table_stuff] 
   puts "A%s grandfather styled [Clock]%s is in the north-east corner of the room" % [@clock_status, @clock_hands]
   puts "A%s [Trapdoor] is against the south wall" % [@trapdoor_status]
-  puts "A pile of wooden logs is in the south-east corner of the room" #put logs in firepalce evry so often or bad things happen
+  puts "A pile of wooden [Logs] is in the south-east corner of the room" #put logs in firepalce evry so often or bad things happen
 end
 
 def start
@@ -142,9 +143,6 @@ def start
 	puts ""
 	prompt; next_move = gets.chomp.downcase
 #basic commands
-if next_move == "go cellar"
-	cellar
-end
 	 	if next_move == "help"
  			help; start
 		end
@@ -333,7 +331,7 @@ def cellar
 		if next_move == "credit" or next_move == "credits"
 			game_credit; cellar
 		end
-#inspect -painting
+#inspect
 		if next_move == "inspect tunnel"
 			puts "You peak inside the tunnel,"; puts "it looks as if after a few feet the light is swallowed by darkness,"
 			puts "after awhile it feels as if the darkness is looking back,"; puts "you back away from the tunnel and decide it isnt a good idea to go down it."
@@ -370,10 +368,19 @@ def cellar
 			@barrel_inspect = " reinforced"
 			cellar
 		end
+		if next_move == "inspect painting"
+			if @painting_inspect == ""
+				@painting_inspect = " depicting a human like head"
+				puts "A olo painting in a scratched wooden frame%s" [@painting_inspect]
+			else
+				puts "A painting%s" % [@painting_inspect]
+			end
+		cellar
+		end
 		movecon = next_move.include? "insepct "
 		if movecon == true
 			puts "These is nothing to take not of"
-			start
+			cellar
 		end
 #take
 		if next_move == "take crowbar"
@@ -422,7 +429,7 @@ def cellar
 		movecon = next_move.include? "take "
 		if movecon == true
 			puts "You cannot take this"
-			start
+			cellar
 		end
 #use
 		if next_move == "use crowbar wooden box"
@@ -455,7 +462,9 @@ def cellar
 					if usetape == "yes"
 						tape
 						@tape_used = true
-						puts "You exist in a room"
+						puts ""
+						puts "You exist in a room..."
+						puts "You have a vague feeling you were here before..."
 						start
 					end
 				end
@@ -483,16 +492,26 @@ def cellar
 		if next_move == "use bone tunnel"
 			if @key4 == false
 				puts "You throw a bone into the tunnel"
-				puts "You hear a munching sounds"
-				puts "After awhile the munching stops and an item gets tossed toward you"
+				puts "The bone disintegrates into nothingness,"
+				puts "The darkness receeds revealing a dimly lit corridor."
 				puts "You pickup [Key part 4]"
 				@inventory << "Key part 4"
 				@key4 = true
 				@inventory.delete "Bone"
 			else
-				puts "You decide tempting fate once is enough"
+				puts "You throw the bone into the tunnel but nothing happens..."
+				@inventory.delete "Bone"
 			end
 			cellar
+		end
+		if next_move == "use tunnel"
+			puts "You travel down the tunnel."
+			puts "As you progress light slowly fades,"
+			puts "Even further and the tunnel walls seem to vanish as well."
+			puts "Eventually you lose track of whats up, down, left, right,"
+			puts "Any direction you look is endless darkness."
+			puts "You continue moving for what feels like ages before you find a pedestal."
+			endroom
 		end
 		if next_move.include? "use"
 			if next_move.include? "rock" and @rock_taken == true
@@ -506,6 +525,8 @@ def cellar
 							@inventory.delete "Rock"
 							@inventory << "Improvised club"
 							@tool_made = true
+							@painting_inspect = " depicting a bloodied skull"
+							cellar
 						else
 							"You already have the Improvised tool"
 							cellar
@@ -523,11 +544,198 @@ def cellar
 		movecon = next_move.include? "use "
 		if movecon == true
 			puts "Nothing happens..."
-			start
+			cellar
 		else
 			puts "Invalid Cookie"
 		end
 	end
+end
+
+def map_endroom
+	puts "There is nothingness, the only thing that exist is the pedestal"
+end
+
+def look_endroom
+	puts "Everywhere is nothingness, you have no clue what is up and what is down,"
+	puts "the only thing that exist is the [Pedestal]"
+	puts "you only know if you move the way you came you will come across the [Tunnel]"
+end
+
+@key_inserted = false
+@key1used = false
+@key2used = false
+@key3used = false
+@key4used = false
+
+def endroom
+if @key1used == true
+	if @key2used == true
+		if @key3used == true
+			if @key4used == true
+				sleep(2)
+				theend
+			end
+		end
+	end
+end
+	while true
+	puts ""
+	prompt; next_move = gets.chomp.downcase
+#basic commands
+	 	if next_move == "help"
+ 			help; endroom
+		end
+		if next_move == "inventory"
+			inventory; endroom
+		end
+		if next_move == "map"
+			map_endroom; endroom
+		end
+		if next_move == "look"
+			look_endroom; endroom
+		end
+		if next_move == "exit"
+			exit
+		end
+		if next_move == "credit" or next_move == "credits"
+			game_credit; endroom
+		end
+#inspect
+		if next_move == "inspect pedestal"
+			if @key_inserted == true
+				puts "A pedestal that has 4 slots on the top"
+				if @key1used == true
+					puts "Key 1 is in its slot"
+				else
+					puts "Key 1 is missing"
+				end
+				if @key2used == true
+					puts "Key 2 is in its slot"
+				else
+					puts "Key 2 is missing"
+				end
+				if @key3used == true
+					puts "Key 3 is in its slot"
+				else
+					puts "Key 3 is missing"
+				end
+				if @key4used == true
+					puts "Key 4 is in its slot"
+				else
+					puts "Key 4 is missing"
+				end
+			else
+				puts "A pedastal that has 4 slots on the top"
+			end
+		endroom
+		end
+		movecon = next_move.include? "inspect "		
+		if movecon == true
+			puts "Nothing happens..."
+			endroom
+		end
+#use
+		if next_move == "use key part 1 pedestal"
+			if @key1used == false
+				puts "You put [Key part 1] in one of the slots,"
+				puts "The slot glows and the key melts filling the slot perfectly"
+				@inventory.delete "Key part 1"
+				@key1used = true
+				@key_inserted = true
+			else
+				puts "That key is already in the pedestal"
+			end
+		endroom
+		end
+		if next_move == "use key part 2 pedestal"
+			if @key2used == false
+				puts "You put [Key part 2] in one of the slots,"
+				puts "The slot glows and the key melts filling the slot perfectly"
+				@inventory.delete "Key part 2"
+				@key2used = true
+				@key_inserted = true
+			else
+				puts "That key is already in the pedestal"
+			end
+		endroom
+		end
+		if next_move == "use key part 3 pedestal"
+			if @key3used == false
+				puts "You put [Key part 3] in one of the slots,"
+				puts "The slot glows and the key melts filling the slot perfectly"
+				@inventory.delete "Key part 3"
+				@key3used = true
+				@key_inserted = true
+			else
+				puts "That key is already in the pedestal"
+			end
+		endroom
+		end
+		if next_move == "use key part 4 pedestal"
+			if @key4used == false
+				puts "You put [Key part 4] in one of the slots,"
+				puts "The slot glows and the key melts filling the slot perfectly"
+				@inventory.delete "Key part 4"
+				@key4used = true
+				@key_inserted = true
+			else
+				puts "That key is already in the pedestal"
+			end
+		endroom
+		end
+		if next_move == "use tunnel"
+			puts "You move back the way you came,"
+			puts "after awhile you stumble back into the cellar."
+			cellar
+		end
+		movecon = next_move.include? "use "
+		if movecon == true
+			puts "Nothing happens..."
+			endroom
+		else
+			puts "Invalid Cookie"
+		end
+	end
+end
+
+def theend
+	puts ""; puts ""; puts ""; puts ""; puts ""; puts ""; puts ""; puts ""; puts ""; puts ""; 
+	puts ""; puts ""; puts ""; puts ""; puts ""; puts ""; puts ""; puts ""; puts ""; puts ""; 
+	puts ""; puts ""; puts ""; puts "" 
+	puts "The pedestal dissolves into a mist of liquid,"
+	puts "Darkness envelops you,"
+	puts "You dont know how much time passes,"
+	sleep(5)
+	puts ""
+	puts "eventually you awake in a forest."
+	sleep(3)
+	puts ""
+	puts "You hear birds chirping and the rustling of leaves,"
+	puts "You smell the aroma of nature,"
+	sleep(4)
+	puts ""
+	puts "Looking back you see a shack,"
+	puts "Did you escape?"
+	puts "Did that really happen?"
+	sleep(5)
+	puts ""
+	puts "You blink and the shack is gone,"
+	puts "replaced by trees spanning in every direction."
+	sleep(4)
+	puts ""
+	puts "> Reach out to touch a tree?"
+	nopick = gets.chomp
+	puts ""
+	puts "As you reach out to touch the tree it disapears in a mist of particles,"
+	puts "the world slowly dissolves in a sea of particles around you..."
+	sleep (6)
+	puts ""
+	puts "was everything a lie?.."
+	sleep(10)
+	puts ""
+	puts "Type anything to exit..."
+	nopick = gets.chomp
+	exit
 end
 
 def tape
@@ -555,13 +763,3 @@ end
 
 puts "You exist in a room."
 start()
-
-#{variable}
-
-#put misc inspect like wall, floor, roof, etc
-
-#get spiderweb, bone, and log, crate cavemean weapon, use on barrel, get tape.
-
-#reactor 4 reference
-
-#trapdoor_first  bug things.

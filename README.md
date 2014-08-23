@@ -1,6 +1,6 @@
 TextGame1-Ruby
 ==============
 
-A basic ruby text game
+A basic ruby text game 
 
-work in progres....
+done, havent 100% tested the game but its beatable.
